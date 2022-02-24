@@ -2,6 +2,7 @@ import express from 'express'
 import { graphqlHTTP } from 'express-graphql'
 import { buildSchema } from 'graphql'
 import morgan from 'morgan'
+import cors from 'cors'
 
 const schema = buildSchema(`
   type User {
@@ -23,15 +24,15 @@ var lastId = 0
 var users: User[] = []
 
 type User = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-};
+  id: number
+  firstName: string
+  lastName: string
+  email: string
+}
 
 var root = {
   hello: () => {
-    return 'Hello world!';
+    return 'Hello world!'
   },
   users: () => {
     return users
@@ -49,15 +50,16 @@ var root = {
     users.push(user)
     return user
   },
-};
+}
 
-const app = express();
-app.use(morgan('combined'));
+const app = express()
+app.use(morgan('combined'))
+app.use(cors())
 app.use('/graphql', graphqlHTTP({
   schema: schema,
   rootValue: root,
   graphiql: true,
-}));
+}))
 
-app.listen(4000);
-console.log('Running a GraphQL API server at http://localhost:4000/graphql');
+app.listen(4000)
+console.log('Running a GraphQL API server at http://localhost:4000/graphql')
